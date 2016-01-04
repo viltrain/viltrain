@@ -13,3 +13,15 @@ redis-cli -h 192.168.3.1 HMSET nginx "{{ $value.Name }}.viltrain.e-tournament.be
 {{end}}
 
 redis-cli -h 192.168.3.1 HMSET nginx "jenkins.viltrain.e-tournament.be" "192.168.3.2:8080"
+
+
+redis-cli DEL docker
+
+{{range $key, $value := .}}
+{{ $addrLen := len $value.Addresses }}
+{{ if gt $addrLen 0 }}
+{{ with $address := index $value.Addresses 0 }}
+redis-cli -h 192.168.3.1 HMSET docker "{{ $value.Name }}.viltrain.e-tournament.be" "{{ $value.ID }}"
+{{ end }}
+{{end}}
+{{end}}
